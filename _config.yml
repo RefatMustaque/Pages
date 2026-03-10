@@ -1,0 +1,10 @@
+title: Notes by Refat Mustaque
+email: refatmustaque@gmail.com
+description: >- # this means to ignore newlines until 
+  Practical software engineering notes, implementation guides, and build insights.
+baseurl: ""
+url: "https://blog.refatmustaque.com"
+
+# Build settings
+plugins:
+  - jekyll-feed

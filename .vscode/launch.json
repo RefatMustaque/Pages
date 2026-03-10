@@ -1,0 +1,12 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Jekyll Preview",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "bundle _2.4.22_ exec jekyll serve",
+      "cwd": "${workspaceFolder}"
+    }
+  ]
+}
