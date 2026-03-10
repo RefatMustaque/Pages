@@ -63,6 +63,7 @@ body {
 .site-nav {
   display: flex;
   gap: 0.8rem;
+  align-items: center;
 }
 
 .site-nav a {
@@ -83,9 +84,13 @@ body {
 }
 
 .nav-dropdown-toggle {
+  display: inline-flex;
+  align-items: center;
   color: var(--ink);
   font-weight: 600;
   font-size: 0.95rem;
+  line-height: 1.2;
+  margin: 0;
   border: none;
   padding: 0.4rem 0.2rem;
   background: transparent;
