@@ -34,19 +34,7 @@ layout: default
     {% endif %}
   </header>
 
-  <div class="post-body-grid">
-    <aside class="post-sidebar" aria-label="Post navigation">
-      <div class="post-sidebar-inner">
-        <h2>On this page</h2>
-        <nav id="post-toc" class="post-toc" aria-label="Table of contents">
-          <ol id="post-toc-list"></ol>
-        </nav>
-        <a class="toc-top-link" href="#main-content">Back to top</a>
-      </div>
-    </aside>
-
-    <section id="post-content" class="prose" itemprop="articleBody">
-      {{ content }}
-    </section>
-  </div>
+  <section id="post-content" class="prose" itemprop="articleBody">
+    {{ content }}
+  </section>
 </article>
