@@ -2,7 +2,7 @@
 
 Personal blog built with [Jekyll](https://jekyllrb.com/) and hosted on [GitHub Pages](https://pages.github.com/).
 
-**Live site:** [blog.refatmustaque.com](https://blog.refatmustaque.com)
+**Live site:** [notes.refatmustaque.com](https://notes.refatmustaque.com)
 
 ## Tech Stack
 
