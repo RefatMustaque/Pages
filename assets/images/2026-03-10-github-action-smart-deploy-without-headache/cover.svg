@@ -1,30 +1,24 @@
-<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
-  <title id="title">GitHub Action Linux Deploy Cover</title>
-  <desc id="desc">Minimal tech-themed cover with terminal panel and deployment signal lines.</desc>
-
-  <rect width="1200" height="630" fill="#F5FAF9"/>
-  <rect x="56" y="58" width="1088" height="514" rx="24" fill="#FFFFFF" stroke="#CFE6E1" stroke-width="2"/>
-
-  <rect x="104" y="126" width="690" height="392" rx="18" fill="#F8FDFC" stroke="#D9ECE8"/>
-  <rect x="104" y="126" width="690" height="50" rx="18" fill="#EDF7F5"/>
-  <circle cx="136" cy="151" r="6" fill="#008073"/>
-  <circle cx="160" cy="151" r="6" fill="#54BCAF"/>
-  <circle cx="184" cy="151" r="6" fill="#9EDAD2"/>
-
-  <path d="M148 232H512" stroke="#B8DAD4" stroke-width="12" stroke-linecap="round"/>
-  <path d="M148 266H650" stroke="#D3E8E4" stroke-width="10" stroke-linecap="round"/>
-  <path d="M148 298H468" stroke="#C6E1DC" stroke-width="10" stroke-linecap="round"/>
-  <path d="M148 362H320" stroke="#DCECEA" stroke-width="10" stroke-linecap="round"/>
-  <path d="M148 396H560" stroke="#D3E8E4" stroke-width="10" stroke-linecap="round"/>
-
-  <rect x="840" y="156" width="300" height="320" rx="16" fill="#F7FCFB" stroke="#D6EAE6"/>
-  <path d="M880 244H1100" stroke="#CAE4DF" stroke-width="8" stroke-linecap="round"/>
-  <path d="M880 280H1026" stroke="#D8ECE8" stroke-width="8" stroke-linecap="round"/>
-  <path d="M880 316H1080" stroke="#CAE4DF" stroke-width="8" stroke-linecap="round"/>
-
-  <circle cx="988" cy="396" r="52" fill="#EAF7F4" stroke="#C4E3DD"/>
-  <path d="M964 396L982 414L1014 380" stroke="#008073" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
-
-  <text x="106" y="94" fill="#1F3D38" font-family="Sora, Segoe UI, sans-serif" font-size="30" font-weight="700">GitHub Action Deploy</text>
-  <text x="106" y="546" fill="#3E615A" font-family="Sora, Segoe UI, sans-serif" font-size="24">Reliable Linux deployment workflow</text>
+<svg width="720" height="320" viewBox="0 0 720 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="720" height="320" fill="#fff"/>
+  <text x="120" y="40" font-size="22" font-family="Arial" fill="#d32f2f" font-weight="bold">Before: Manual Deploy</text>
+  <rect x="40" y="60" width="260" height="200" rx="16" fill="#ffeaea" stroke="#d32f2f" stroke-width="2"/>
+  <text x="60" y="100" font-size="16" font-family="Arial" fill="#d32f2f">Build Locally</text>
+  <text x="60" y="130" font-size="16" font-family="Arial" fill="#d32f2f">Upload via FTP/SSH</text>
+  <text x="60" y="160" font-size="16" font-family="Arial" fill="#d32f2f">Manual Backup</text>
+  <text x="60" y="190" font-size="16" font-family="Arial" fill="#d32f2f">Manual Restart</text>
+  <text x="60" y="220" font-size="16" font-family="Arial" fill="#d32f2f">Check App</text>
+  <text x="420" y="40" font-size="22" font-family="Arial" fill="#388e3c" font-weight="bold">After: Automated Deploy</text>
+  <rect x="380" y="60" width="300" height="200" rx="16" fill="#e8f5e9" stroke="#388e3c" stroke-width="2"/>
+  <text x="400" y="100" font-size="16" font-family="Arial" fill="#388e3c">Build in CI (GitHub Actions)</text>
+  <text x="400" y="130" font-size="16" font-family="Arial" fill="#388e3c">Auto Backup</text>
+  <text x="400" y="160" font-size="16" font-family="Arial" fill="#388e3c">Auto Upload</text>
+  <text x="400" y="190" font-size="16" font-family="Arial" fill="#388e3c">Auto Restart</text>
+  <text x="400" y="220" font-size="16" font-family="Arial" fill="#388e3c">Auto Check</text>
+  <line x1="300" y1="160" x2="380" y2="160" stroke="#888" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="315" y="150" font-size="14" font-family="Arial" fill="#888">CI/CD</text>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="10" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L10,5 L0,10 L3,5 Z" fill="#888" />
+    </marker>
+  </defs>
 </svg>
