@@ -5,8 +5,6 @@ date: 2024-09-07
 image: /assets/images/2024-09-07-how-to-integrate-barclay-payment-gateway/epdq_rpp_desktop_mobile.jpg
 ---
 
-## Introduction
-
 In today's world of e-commerce, ensuring secure and seamless payment integration is crucial for any website. This post walks through the process of integrating the Barclaycard payment gateway using a test account, based on sample code available in my GitHub repository.
 
 ## What Is Barclaycard Payment Gateway?
