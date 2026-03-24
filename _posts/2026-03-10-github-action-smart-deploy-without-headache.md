@@ -1,8 +1,9 @@
 ---
-layout: post
 title: "A Simple GitHub Action to Deploy .NET App to Linux"
+layout: post
 date: 2026-03-10
-image: /assets/images/2026-03-10-github-action-smart-deploy-without-headache/cover.svg
+image: assets/images/2026-03-10-github-action-smart-deploy-without-headache/cover.svg
+tags: [GitHub, Deployment, .NET]
 ---
 
 Deploying to a server can feel hard at first.

@@ -202,13 +202,20 @@ title: Home
     <p class="eyebrow">Discover</p>
     <h2 id="category-title">Browse by topic</h2>
   </div>
+  {% assign all_tags = "" | split: "" %}
+  {% for post in site.posts %}
+    {% for tag in post.tags %}
+      {% unless all_tags contains tag %}
+        {% assign all_tags = all_tags | push: tag %}
+      {% endunless %}
+    {% endfor %}
+  {% endfor %}
+  {% assign all_tags = all_tags | sort %}
   <div class="category-chips" id="category-chips" role="group" aria-label="Filter posts by topic">
     <button type="button" class="category-chip is-active" data-filter="all">All</button>
-    <button type="button" class="category-chip" data-filter="deployment">Deployment</button>
-    <button type="button" class="category-chip" data-filter="github">GitHub</button>
-    <button type="button" class="category-chip" data-filter="api">API</button>
-    <button type="button" class="category-chip" data-filter="dotnet">.NET</button>
-    <button type="button" class="category-chip" data-filter="security">Security</button>
+    {% for tag in all_tags %}
+      <button type="button" class="category-chip" data-filter="{{ tag | downcase }}">{{ tag }}</button>
+    {% endfor %}
   </div>
 </section>
 
@@ -269,7 +276,7 @@ title: Home
     {% if read_minutes < 1 %}
       {% assign read_minutes = 1 %}
     {% endif %}
-    {% assign taxonomy_text = post.title | append: ' ' | append: post.excerpt | downcase %}
+    {% assign taxonomy_text = post.tags | join: ' ' | downcase %}
     <article
       class="post-card"
       data-title="{{ post.title | escape }}"
@@ -277,7 +284,7 @@ title: Home
       data-year="{{ post.date | date: '%Y' }}"
       data-month="{{ post.date | date: '%-m' }}"
       data-date="{{ post.date | date: '%s' }}"
-      data-taxonomy="{{ taxonomy_text | strip_html | strip_newlines | escape }}"
+      data-taxonomy="{{ taxonomy_text | escape }}"
     >
       {% if post.image %}
         <a class="post-card-media" href="{{ post.url | relative_url }}">
@@ -291,11 +298,9 @@ title: Home
       <h2><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h2>
       <p>{{ post.excerpt | strip_html | truncate: 150 }}</p>
       <div class="post-tags" aria-label="Post tags">
-        {% assign title_down = post.title | downcase %}
-        {% if title_down contains 'github' %}<span class="tag">GitHub</span>{% endif %}
-        {% if title_down contains 'deploy' or title_down contains 'action' %}<span class="tag">Deployment</span>{% endif %}
-        {% if title_down contains 'gateway' or title_down contains 'payment' %}<span class="tag">Security</span>{% endif %}
-        {% if title_down contains '.net' %}<span class="tag">.NET</span>{% endif %}
+        {% for tag in post.tags %}
+          <span class="tag">{{ tag }}</span>
+        {% endfor %}
       </div>
       <a class="read-more" href="{{ post.url | relative_url }}">Read article</a>
     </article>

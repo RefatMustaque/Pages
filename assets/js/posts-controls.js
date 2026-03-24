@@ -55,7 +55,8 @@
       return true;
     }
 
-    return normalize(card.dataset.taxonomy).indexOf(category) !== -1;
+    var taxonomy = " " + normalize(card.dataset.taxonomy) + " ";
+    return taxonomy.indexOf(" " + category + " ") !== -1;
   }
 
   function sortCards(visibleCards, order) {

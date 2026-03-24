@@ -1,8 +1,9 @@
 ---
-layout: post
 title: "GitHub Scraper: Download Repositories as TXT or HTML"
+layout: post
 date: 2024-12-26
-image: /assets/images/2024-12-26-github-scraper-simple-starting-point/cover.svg
+image: assets/images/2024-12-26-github-scraper-simple-starting-point/cover.svg
+tags: [GitHub, Tools]
 ---
 
 When working with GitHub repositories, sometimes you need everything quickly in one place for study, reference, or offline reading. Getting this in a single, readable format is not always easy. That is where **GitHub Scraper** helps.
