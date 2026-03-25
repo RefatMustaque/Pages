@@ -1,0 +1,18 @@
+<svg width="720" height="320" viewBox="0 0 720 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="720" height="320" fill="#fff"/>
+  <text x="120" y="60" font-size="22" font-family="Arial" fill="#1976d2" font-weight="bold">Cardstream Signature Verification</text>
+  <rect x="60" y="100" width="600" height="120" rx="20" fill="#e3f2fd" stroke="#1976d2" stroke-width="2"/>
+  <text x="90" y="150" font-size="18" font-family="Arial" fill="#1976d2">C# &amp; PHP URL Encoding Differences</text>
+  <text x="90" y="180" font-size="14" font-family="Arial" fill="#333">Spaces, brackets, tildes, and hex case all matter for signature checks!</text>
+  <rect x="100" y="220" width="180" height="50" rx="10" fill="#fffde7" stroke="#fbc02d" stroke-width="2"/>
+  <text x="110" y="250" font-size="13" font-family="Arial" fill="#fbc02d">C# EscapeDataString</text>
+  <rect x="440" y="220" width="180" height="50" rx="10" fill="#e8f5e9" stroke="#388e3c" stroke-width="2"/>
+  <text x="450" y="250" font-size="13" font-family="Arial" fill="#388e3c">PHP urlencode</text>
+  <line x1="280" y1="245" x2="440" y2="245" stroke="#888" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="320" y="240" font-size="12" font-family="Arial" fill="#888">Compare</text>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="10" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L10,5 L0,10 L3,5 Z" fill="#888" />
+    </marker>
+  </defs>
+</svg>

@@ -1,4 +1,5 @@
 ---
+image: assets/images/2026-03-25-cardstream-signature-verification/cover.svg
 layout: post
 title: "Cardstream Payment Gateway Signature Verification in C#"
 date: 2026-03-25 10:00:00 +0000
@@ -7,7 +8,10 @@ categories: [payment, security, cardstream]
 
 I spent a few hours staring at failed hash checks before I finally got Cardstream signature verification working in C#. Here's what I learned, mostly from getting it wrong first.
 
----
+<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 2rem 0;">
+    <img src="/assets/images/2026-03-25-cardstream-signature-verification/cover.svg" alt="Cardstream Signature Verification" style="max-width: 420px; width: 100%; height: auto;" />
+</div>
+
 
 ## What even is the problem?
 
