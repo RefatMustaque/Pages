@@ -43,7 +43,7 @@ My first thought was to tidy things up. I removed `__wafRequestID` (looked like 
 All wrong. Cardstream signs *everything*. That WAF field is added by a proxy before the request reaches you and it still gets signed. Empty fields like `threeDSDetails[eci]=` still get included. The **only** thing you remove is `signature`.
 
 ```csharp
-var filteredPairs = allPairs
+var dataFields = parsedPairs
     .Where(p => !p.Key.Equals("signature", StringComparison.OrdinalIgnoreCase))
     .Where(p => !string.IsNullOrWhiteSpace(p.Key))
     .ToList(); // don't sort yet - keep original order
@@ -60,10 +60,10 @@ I sorted everything alphabetically, which rearranged the sub-fields too. My stri
 The fix: sort by the root key only. Since .NET's `OrderBy` is a stable sort, the sub-fields naturally stay in their original order.
 
 ```csharp
-var sorted = payload.OrderedFields
-    .OrderBy(kv => kv.Key.Contains('[')
-        ? kv.Key[..kv.Key.IndexOf('[')]
-        : kv.Key, StringComparer.Ordinal)
+var sortedFields = data.FieldsInOrder
+    .OrderBy(f => f.Key.Contains('[')
+        ? f.Key[..f.Key.IndexOf('[')]
+        : f.Key, StringComparer.Ordinal)
     .ToList();
 ```
 
@@ -119,16 +119,16 @@ The `[` and `]` difference broke the bracket-notation keys. Something like `thre
 I wrote a method that matches PHP's behaviour:
 
 ```csharp
-private static string PhpUrlEncode(string value)
+private static string EncodePhpStyle(string input)
 {
-    if (string.IsNullOrEmpty(value)) return string.Empty;
-    var encoded = Uri.EscapeDataString(value);
-    encoded = Regex.Replace(encoded, "%[0-9a-f]{2}", m => m.Value.ToUpper());
-    encoded = encoded.Replace("%20", "+");
-    encoded = encoded.Replace("~", "%7E");
-    encoded = encoded.Replace("[", "%5B");
-    encoded = encoded.Replace("]", "%5D");
-    return encoded;
+    if (string.IsNullOrEmpty(input)) return string.Empty;
+    var result = Uri.EscapeDataString(input);
+    result = Regex.Replace(result, "%[0-9a-f]{2}", m => m.Value.ToUpper());
+    result = result.Replace("%20", "+");
+    result = result.Replace("~", "%7E");
+    result = result.Replace("[", "%5B");
+    result = result.Replace("]", "%5D");
+    return result;
 }
 ```
 
@@ -151,8 +151,8 @@ My raw body read was returning nothing because something upstream had already to
 The fix: read the raw body directly and never touch `request.Form` in the payload code.
 
 ```csharp
-var isFormPost = request.HasFormContentType &&
-                 request.Method.Equals("POST", StringComparison.OrdinalIgnoreCase);
+var isPost = request.HasFormContentType &&
+             request.Method.Equals("POST", StringComparison.OrdinalIgnoreCase);
 ```
 
 Also: call `request.EnableBuffering()` in your middleware and reset `request.Body.Position = 0` after reading, so other code can still read it.
@@ -161,42 +161,42 @@ Also: call `request.EnableBuffering()` in your middleware and reset `request.Bod
 
 ## The full working code
 
-### `CardStreamCallbackPayload`
+### `GatewayCallbackData`
 
 ```csharp
-public class CardStreamCallbackPayload
+public class GatewayCallbackData
 {
-    public Dictionary<string, string> Fields { get; set; }
-    public List<(string Key, string Value)> OrderedFields { get; set; }
-    public string RawSignatureString { get; set; }
-    public string Signature { get; set; }
-    public string SignatureFieldName { get; set; }
+    public Dictionary<string, string> AllFields { get; set; }
+    public List<(string Key, string Value)> FieldsInOrder { get; set; }
+    public string RawEncodedString { get; set; }
+    public string ReceivedHash { get; set; }
+    public string HashFieldName { get; set; }
 }
 ```
 
-### `BuildCardStreamPayloadFromRequestAsync`
+### `ParseGatewayCallbackAsync`
 
 ```csharp
-public async Task<CardStreamCallbackPayload> BuildCardStreamPayloadFromRequestAsync(HttpRequest request)
+public async Task<GatewayCallbackData> ParseGatewayCallbackAsync(HttpRequest request)
 {
-    string rawBody;
-    var isFormPost = request.HasFormContentType &&
-                     request.Method.Equals("POST", StringComparison.OrdinalIgnoreCase);
+    string bodyText;
+    var isPost = request.HasFormContentType &&
+                 request.Method.Equals("POST", StringComparison.OrdinalIgnoreCase);
 
-    if (isFormPost)
+    if (isPost)
     {
         request.EnableBuffering();
         request.Body.Position = 0;
         using var reader = new StreamReader(request.Body, Encoding.UTF8, leaveOpen: true);
-        rawBody = await reader.ReadToEndAsync();
+        bodyText = await reader.ReadToEndAsync();
         request.Body.Position = 0;
     }
     else
     {
-        rawBody = string.Join("&", request.Query.Select(q => $"{q.Key}={q.Value}"));
+        bodyText = string.Join("&", request.Query.Select(q => $"{q.Key}={q.Value}"));
     }
 
-    var allPairs = rawBody.Split('&')
+    var parsedPairs = bodyText.Split('&')
         .Select(p => {
             var idx = p.IndexOf('=');
             if (idx == -1) return (Key: string.Empty, RawValue: string.Empty);
@@ -205,85 +205,85 @@ public async Task<CardStreamCallbackPayload> BuildCardStreamPayloadFromRequestAs
         .Where(p => !string.IsNullOrEmpty(p.Key))
         .ToList();
 
-    var sigPair = allPairs.FirstOrDefault(p =>
+    var hashField = parsedPairs.FirstOrDefault(p =>
         p.Key.Equals("signature", StringComparison.OrdinalIgnoreCase));
-    var signature = sigPair.Key?.Length > 0
-        ? Uri.UnescapeDataString((sigPair.RawValue ?? string.Empty).Replace("+", " "))
+    var receivedHash = hashField.Key?.Length > 0
+        ? Uri.UnescapeDataString((hashField.RawValue ?? string.Empty).Replace("+", " "))
         : string.Empty;
-    var signatureFieldName = sigPair.Key?.Length > 0 ? sigPair.Key : "signature";
+    var hashFieldName = hashField.Key?.Length > 0 ? hashField.Key : "signature";
 
-    var filteredPairs = allPairs
+    var dataFields = parsedPairs
         .Where(p => !p.Key.Equals("signature", StringComparison.OrdinalIgnoreCase))
         .Where(p => !string.IsNullOrWhiteSpace(p.Key))
         .ToList();
 
-    var fields = filteredPairs.ToDictionary(
+    var fieldMap = dataFields.ToDictionary(
         p => p.Key!,
         p => Uri.UnescapeDataString((p.RawValue ?? string.Empty).Replace("+", " ")),
         StringComparer.Ordinal);
 
-    var orderedFields = filteredPairs
+    var fieldList = dataFields
         .Select(p => (
             Key: p.Key,
             Value: Uri.UnescapeDataString((p.RawValue ?? string.Empty).Replace("+", " "))
         ))
         .ToList();
 
-    var rawSignatureString = string.Join("&", filteredPairs.Select(p => $"{p.Key}={p.RawValue}"));
+    var encodedFieldString = string.Join("&", dataFields.Select(p => $"{p.Key}={p.RawValue}"));
 
-    return new CardStreamCallbackPayload
+    return new GatewayCallbackData
     {
-        Fields = fields,
-        OrderedFields = orderedFields,
-        Signature = signature,
-        SignatureFieldName = signatureFieldName,
-        RawSignatureString = rawSignatureString
+        AllFields = fieldMap,
+        FieldsInOrder = fieldList,
+        ReceivedHash = receivedHash,
+        HashFieldName = hashFieldName,
+        RawEncodedString = encodedFieldString
     };
 }
 ```
 
-### `VerifyGatewayResponse`
+### `IsSignatureValid`
 
 ```csharp
-public bool VerifyGatewayResponse(CardStreamCallbackPayload payload)
+public bool IsSignatureValid(GatewayCallbackData data)
 {
-    var settings = GetCardStreamSettings();
+    var config = LoadGatewayConfig();
 
-    var sorted = payload.OrderedFields
-        .OrderBy(kv => kv.Key.Contains('[')
-            ? kv.Key[..kv.Key.IndexOf('[')]
-            : kv.Key, StringComparer.Ordinal)
+    var sortedFields = data.FieldsInOrder
+        .OrderBy(f => f.Key.Contains('[')
+            ? f.Key[..f.Key.IndexOf('[')]
+            : f.Key, StringComparer.Ordinal)
         .ToList();
 
-    var parts = sorted.Select(kv => $"{PhpUrlEncode(kv.Key)}={PhpUrlEncode(kv.Value)}");
-    var queryString = string.Join("&", parts);
+    var encodedParts = sortedFields.Select(f => $"{EncodePhpStyle(f.Key)}={EncodePhpStyle(f.Value)}");
+    var signingInput = string.Join("&", encodedParts);
 
-    queryString = queryString
+    signingInput = signingInput
         .Replace("%0D%0A", "%0A")
         .Replace("%0A%0D", "%0A")
         .Replace("%0D", "%0A");
 
-    var stringToHash = queryString + settings.MerchantSecret;
+    var hashInput = signingInput + config.SharedSecret;
 
-    using var hash = SHA512.Create();
-    var computed = BitConverter.ToString(
-        hash.ComputeHash(Encoding.UTF8.GetBytes(stringToHash)))
+    using var sha = SHA512.Create();
+    var expectedHash = BitConverter.ToString(
+        sha.ComputeHash(Encoding.UTF8.GetBytes(hashInput)))
         .Replace("-", "")
         .ToLowerInvariant();
 
-    return computed == payload.Signature.ToLowerInvariant();
+    return expectedHash == data.ReceivedHash.ToLowerInvariant();
 }
 
-private static string PhpUrlEncode(string value)
+private static string EncodePhpStyle(string input)
 {
-    if (string.IsNullOrEmpty(value)) return string.Empty;
-    var encoded = Uri.EscapeDataString(value);
-    encoded = Regex.Replace(encoded, "%[0-9a-f]{2}", m => m.Value.ToUpper());
-    encoded = encoded.Replace("%20", "+");
-    encoded = encoded.Replace("~", "%7E");
-    encoded = encoded.Replace("[", "%5B");
-    encoded = encoded.Replace("]", "%5D");
-    return encoded;
+    if (string.IsNullOrEmpty(input)) return string.Empty;
+    var result = Uri.EscapeDataString(input);
+    result = Regex.Replace(result, "%[0-9a-f]{2}", m => m.Value.ToUpper());
+    result = result.Replace("%20", "+");
+    result = result.Replace("~", "%7E");
+    result = result.Replace("[", "%5B");
+    result = result.Replace("]", "%5D");
+    return result;
 }
 ```
 
@@ -296,12 +296,12 @@ Cardstream has a sig test tool at `https://gateway.cardstream.com/devtools/sigte
 You can do that from your browser console:
 
 ```javascript
-const rawBody = '...your raw callback body...';
+const callbackBody = '...your raw callback body...';
 const form = document.createElement('form');
 form.method = 'POST';
 form.action = 'https://gateway.cardstream.com/devtools/sigtest.php?key=YOUR_SECRET';
 form.target = '_blank';
-rawBody.split('&').forEach(pair => {
+callbackBody.split('&').forEach(pair => {
     const idx = pair.indexOf('=');
     const key = decodeURIComponent(pair.slice(0, idx).replace(/\+/g, ' '));
     const value = idx === pair.length - 1
@@ -320,7 +320,7 @@ document.body.removeChild(form);
 
 One thing to watch: if a field arrives as `threeDSDetails[eci]=` with nothing after the `=`, the form still needs to submit it as an empty string. Don't skip it.
 
-Also: log `stringToHash` while you're debugging and compare it character by character to the sig tool output. Just remember to remove that log before going to production, because it has your secret key in it.
+Also: log `hashInput` while you're debugging and compare it character by character to the sig tool output. Just remember to remove that log before going to production, because it has your secret key in it.
 
 ---
 
