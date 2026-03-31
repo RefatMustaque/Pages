@@ -161,10 +161,10 @@ select:focus-visible,
 .nav-dropdown-menu {
   position: absolute;
   right: 0;
-  top: calc(100% + 0.45rem);
+  top: 100%;
   list-style: none;
   margin: 0;
-  padding: 0.25rem 0;
+  padding: 0.45rem 0 0.25rem;
   min-width: 200px;
   border: 1px solid var(--line);
   border-radius: var(--radius-md);

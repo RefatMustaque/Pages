@@ -204,7 +204,8 @@ title: Home
   </div>
   {% assign all_tags = "" | split: "" %}
   {% for post in site.posts %}
-    {% for tag in post.tags %}
+    {% assign post_taxonomy = post.tags | concat: post.categories %}
+    {% for tag in post_taxonomy %}
       {% unless all_tags contains tag %}
         {% assign all_tags = all_tags | push: tag %}
       {% endunless %}
@@ -276,7 +277,7 @@ title: Home
     {% if read_minutes < 1 %}
       {% assign read_minutes = 1 %}
     {% endif %}
-    {% assign taxonomy_text = post.tags | join: ' ' | downcase %}
+    {% assign taxonomy_text = post.tags | concat: post.categories | join: ' ' | downcase %}
     <article
       class="post-card"
       data-title="{{ post.title | escape }}"
@@ -298,7 +299,8 @@ title: Home
       <h2><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h2>
       <p>{{ post.excerpt | strip_html | truncate: 150 }}</p>
       <div class="post-tags" aria-label="Post tags">
-        {% for tag in post.tags %}
+        {% assign post_display_tags = post.tags | concat: post.categories %}
+        {% for tag in post_display_tags %}
           <span class="tag">{{ tag }}</span>
         {% endfor %}
       </div>
