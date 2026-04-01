@@ -8,6 +8,8 @@
     {% if page.site %}<meta name="site" content="{{ page.site | join: ', ' }}">{% endif %}
     {% if page.social.linkedin %}<meta name="linkedin" content="{{ page.social.linkedin }}">{% endif %}
     {% if page.social.github %}<meta name="github" content="{{ page.social.github }}">{% endif %}
+    {% assign all_keywords = site.keywords %}{% if page.tags %}{% assign all_keywords = site.keywords | concat: page.tags %}{% endif %}
+    {% if all_keywords %}<meta name="keywords" content="{{ all_keywords | join: ', ' }}">{% endif %}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,600;1,400&family=Sora:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">

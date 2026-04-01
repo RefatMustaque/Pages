@@ -4,6 +4,13 @@ description: >- # this means to ignore newlines until
   Practical software engineering notes, implementation guides, and build insights.
 baseurl: ""
 url: "https://notes.refatmustaque.com"
+keywords:
+  - software engineering
+  - asp.net core
+  - .net
+  - c#
+  - web development
+  - devops
 
 # Front matter defaults — auto-applied to every page and post
 defaults:
