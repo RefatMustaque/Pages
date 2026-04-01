@@ -24,3 +24,4 @@ defaults:
 # Build settings
 plugins:
   - jekyll-feed
+  - jekyll-sitemap
