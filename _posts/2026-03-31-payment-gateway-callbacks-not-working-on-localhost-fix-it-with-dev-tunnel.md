@@ -16,13 +16,9 @@ Dev Tunnel fixed it.
 
 When your app runs locally, only your own machine can access it. An outside service like a payment gateway has no address to connect to. So the callback just disappears silently. No error, no log. It looks like a code problem but it is really a network access problem.
 
-## It works even on an office VPN
-
-One thing I noticed is that Dev Tunnel continued to work even while I was connected to my office VPN. This is worth mentioning because some tools break when you are on a corporate network.
-
-Dev Tunnel gets around this because it only uses outbound HTTPS connections on port 443. That is standard web traffic, and most corporate networks allow it without any special rules. Your machine reaches out to Microsoft's tunnel relay service, and the payment gateway calls back through that same connection. No inbound firewall rules are needed and no special network access is required.
-
-So if you are working from an office or connected to a work VPN, you do not need to disconnect just to test a callback. Dev Tunnel should still work as expected.
+<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 2rem 0;">
+    <img src="/assets/images/2026-03-31-how-dev-tunnel-helped-me-test-cardstream-callback/dev-tunnel-flow.png" alt="Callback flow from localhost through dev tunnel to payment gateway" style="max-width: 900px; width: 100%; height: auto;" />
+</div>
 
 ## What Dev Tunnel does
 
@@ -41,6 +37,14 @@ For payment callbacks and webhooks, right click the port and set visibility to P
 Run your project and look for the Dev Tunnel option near the run and debug controls. Sign in if prompted, select your port, and create the tunnel. Visual Studio gives you a public URL for the session.
 
 Same rule applies here. Set access to Public if a third party service needs to reach it, then add your callback route and update your gateway settings.
+
+## It works even on an office VPN
+
+One thing I noticed is that Dev Tunnel continued to work even while I was connected to my office VPN. This is worth mentioning because some tools break when you are on a corporate network.
+
+Dev Tunnel gets around this because it only uses outbound HTTPS connections on port 443. That is standard web traffic, and most corporate networks allow it without any special rules. Your machine reaches out to Microsoft's tunnel relay service, and the payment gateway calls back through that same connection. No inbound firewall rules are needed and no special network access is required.
+
+So if you are working from an office or connected to a work VPN, you do not need to disconnect just to test a callback. Dev Tunnel should still work as expected.
 
 ## One thing to be careful about
 
