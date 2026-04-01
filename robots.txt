@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://notes.refatmustaque.com/sitemap.xml
