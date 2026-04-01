@@ -4,6 +4,7 @@ title: About
 permalink: /about/
 ---
 
+
 <section class="hero">
   <p class="eyebrow">About</p>
   <h1>Software engineer sharing field-tested technical guidance.</h1>

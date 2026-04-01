@@ -5,6 +5,22 @@ description: >- # this means to ignore newlines until
 baseurl: ""
 url: "https://notes.refatmustaque.com"
 
+# Front matter defaults — auto-applied to every page and post
+defaults:
+  - scope:
+      path: ""
+    values:
+      author:
+        - "Refat Mustaque"
+        - "Refat Bin Mustaque"
+      site:
+        - "refatmustaque.com"
+        - "notes.refatmustaque.com"
+        - "githubscrapper.refatmustaque.com"
+      social:
+        linkedin: "https://linkedin.com/in/refatmustaque"
+        github: "https://github.com/refatmustaque"
+
 # Build settings
 plugins:
   - jekyll-feed

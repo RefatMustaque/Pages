@@ -7,10 +7,9 @@ title: Home
   <div class="home-hero-copy">
     <p class="eyebrow">Software Engineering Notes</p>
     <h1 id="home-title">Build logs, practical guides, and code-first insights.</h1>
-    <p>
       A programming journal focused on implementation details, deployment workflows,
       and lessons from building real products.
-    </p>
+
     <div class="home-hero-cta">
       <a class="button button-primary" href="#featured-posts">Explore featured</a>
       <a class="button button-ghost" href="#posts">Browse all posts</a>
